@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         nceldas = 8;
-        nminas = 10;
+        nminas = 1;
         hipotenocha = this.getDrawable(R.mipmap.personaje1);
 
     }
@@ -139,10 +139,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 case 0:
                     celda.setBackgroundColor(Color.BLUE);
                     descubrirRecursivo(celda);
+                    analisisVictoria();
                     break;
                 default:
                     celda.setDescubierto(true);
                     celda.setText(String.valueOf(celda.getValor()));
+                    analisisVictoria();
             }
         }
     }
@@ -150,6 +152,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void derrota(Celda celda, String mensaje) {
         desactivarTodas();
         Toast.makeText(this, mensaje, Toast.LENGTH_LONG).show();
+    }
+
+    private void victoria() {
+        desactivarTodas();
+        Toast.makeText(this, "ENHORABUENA, HAS GANADO!!", Toast.LENGTH_LONG).show();
     }
 
     private void descubrirRecursivo(Celda celda) {
@@ -213,6 +220,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return super.onOptionsItemSelected(item);
     }
 
+    private void analisisVictoria() {
+        int celdasDescubiertas = 0;
+        for(int i=0; i<nceldas; i++) {
+            for(int j=0; j<nceldas; j++) {
+                if(celdas[i][j].isDescubierto()) {
+                    celdasDescubiertas++;
+                }
+            }
+        }
+
+        if(celdasDescubiertas == Math.pow(nceldas,2) && descubiertas == nminas) {
+            victoria();
+        }
+    }
+
     @Override
     public void onClick(View v) {
         if (v instanceof Celda) {
@@ -230,6 +252,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 pulsada.setBackground(hipotenocha);
                 pulsada.setDescubierto(true);
                 Toast.makeText(this, String.format("Mina descubierta!!. Te quedan %d.", nminas - descubiertas), Toast.LENGTH_LONG).show();
+                analisisVictoria();
             } else {
                 pulsada.setText(String.valueOf(pulsada.getValor()));
                 derrota(pulsada, "Ahí no había ninguna mina. Has perdido!!");
