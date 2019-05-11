@@ -8,17 +8,15 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.Toast;
 
-import java.util.Random;
-
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
     private int nceldas; //Para saber el numero de celdas en cada dificultad
     private GridLayout tabla;
     private Celda[][] celdas;
     private int nminas;
+    private int descubiertas;
     private Drawable hipotenocha;
 
     @Override
@@ -33,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void iniciajuego() {
+        descubiertas = 0;
         crearCeldas();
         inicializarTabla();
     }
@@ -81,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             for (int j = 0; j < nceldas; j++) {
                 celdas[i][j] = new Celda(this, 0, i, j);
                 celdas[i][j].setOnClickListener(this);
+                celdas[i][j].setOnLongClickListener(this);
             }
         }
     }
@@ -129,22 +129,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void celdaPulsada(Celda celda) {
-        switch (celda.getValor()) {
-            case -1:
-                celda.setDescubierto(true);
-                celda.setBackground(hipotenocha);
-                desactivarTodas();
-                Toast.makeText(this, "Has perdido!!", Toast.LENGTH_LONG).show();
-                break;
-            case 0:
-                celda.setBackgroundColor(Color.BLUE);
-                descubrirRecursivo(celda);
-                break;
-            default:
-                celda.setDescubierto(true);
-                celda.setText(String.valueOf(celda.getValor()));
+    private void clickEnCelda(Celda celda) {
+        if(!celda.isDescubierto()) {
+            switch (celda.getValor()) {
+                case -1:
+                    celda.setBackground(hipotenocha);
+                    derrota(celda, "Pisaste una mina. Has perdido!!");
+                    break;
+                case 0:
+                    celda.setBackgroundColor(Color.BLUE);
+                    descubrirRecursivo(celda);
+                    break;
+                default:
+                    celda.setDescubierto(true);
+                    celda.setText(String.valueOf(celda.getValor()));
+            }
         }
+    }
+
+    private void derrota(Celda celda, String mensaje) {
+        desactivarTodas();
+        Toast.makeText(this, mensaje, Toast.LENGTH_LONG).show();
     }
 
     private void descubrirRecursivo(Celda celda) {
@@ -171,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void desactivarTodas() {
         for (int i = 0; i < nceldas; i++) {
             for (int j = 0; j < nceldas; j++) {
-                celdas[i][j].setClickable(false);
+                celdas[i][j].setEnabled(false);
             }
         }
     }
@@ -211,7 +216,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if (v instanceof Celda) {
-            celdaPulsada((Celda) v);
+            clickEnCelda((Celda) v);
         }
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        if (v instanceof Celda) {
+            Celda pulsada = (Celda) v;
+
+            if(pulsada.getValor() == -1) {
+                descubiertas++;
+                pulsada.setBackground(hipotenocha);
+                pulsada.setDescubierto(true);
+                Toast.makeText(this, String.format("Mina descubierta!!. Te quedan %d.", nminas - descubiertas), Toast.LENGTH_LONG).show();
+            } else {
+                pulsada.setText(String.valueOf(pulsada.getValor()));
+                derrota(pulsada, "Ahí no había ninguna mina. Has perdido!!");
+            }
+        }
+        return false;
     }
 }
