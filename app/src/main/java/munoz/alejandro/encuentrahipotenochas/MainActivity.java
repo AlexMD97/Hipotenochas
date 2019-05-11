@@ -1,5 +1,6 @@
 package munoz.alejandro.encuentrahipotenochas;
 
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -57,14 +58,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void recalcularValores() {
         for (int i = 0; i < nceldas; i++) {
             for (int j = 0; j < nceldas; j++) {
-                if(celdas[i][j].getValor() == -1) {
-                    for(int k = i-1; k<=i+1; k++) {
-                        for(int l = j-1; l<=j+1; l++) {
+                if (celdas[i][j].getValor() == -1) {
+                    for (int k = i - 1; k <= i + 1; k++) {
+                        for (int l = j - 1; l <= j + 1; l++) {
                             try {
-                                if(celdas[k][l].getValor() != -1) {
+                                if (celdas[k][l].getValor() != -1) {
                                     celdas[k][l].incrementar();
                                 }
-                            } catch(ArrayIndexOutOfBoundsException ex) {
+                            } catch (ArrayIndexOutOfBoundsException ex) {
                                 // Controla que no nos salgamos del array
                             }
                         }
@@ -87,8 +88,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void colocarMinas() {
         int contador = 0;
         while (contador < nminas) {
-            int x = (int) Math.round(Math.random() * (nceldas-1));
-            int y = (int) Math.round(Math.random() * (nceldas-1));
+            int x = (int) Math.round(Math.random() * (nceldas - 1));
+            int y = (int) Math.round(Math.random() * (nceldas - 1));
 
             if (celdas[x][y].getValor() != -1) {
                 celdas[x][y].setValor(-1);
@@ -119,8 +120,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int bancho = ancho / nceldas;
         int balto = alto / nceldas;
 
-        for(int i=0; i<nceldas; i++) {
-            for(int j=0; j<nceldas; j++) {
+        for (int i = 0; i < nceldas; i++) {
+            for (int j = 0; j < nceldas; j++) {
                 tabla.addView(celdas[i][j], bancho, balto);
                 //System.out.printf("%d ", celdas[i][j].getValor());
             }
@@ -133,11 +134,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case -1:
                 celda.setDescubierto(true);
                 celda.setBackground(hipotenocha);
-               desactivarTodas();
+                desactivarTodas();
                 Toast.makeText(this, "Has perdido!!", Toast.LENGTH_LONG).show();
                 break;
             case 0:
-
+                celda.setBackgroundColor(Color.BLUE);
+                descubrirRecursivo(celda);
                 break;
             default:
                 celda.setDescubierto(true);
@@ -145,9 +147,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    private void descubrirRecursivo(Celda celda) {
+        celda.setDescubierto(true);
+        for (int i = celda.getPosicionx() - 1; i <= celda.getPosicionx() + 1; i++) {
+            for (int j = celda.getPosiciony() - 1; j <= celda.getPosiciony() + 1; j++) {
+                try {
+                    if(!celdas[i][j].isDescubierto()) {
+                        if(celdas[i][j].getValor() == 0) {
+                            celdas[i][j].setBackgroundColor(Color.BLUE);
+                            descubrirRecursivo(celdas[i][j]);
+                        } else {
+                            celdas[i][j].setText(String.valueOf(celdas[i][j].getValor()));
+                            celdas[i][j].setDescubierto(true);
+                        }
+                    }
+                } catch(ArrayIndexOutOfBoundsException ex) {
+
+                }
+            }
+        }
+    }
+
     private void desactivarTodas() {
-        for(int i=0; i<nceldas; i++) {
-            for(int j=0; j<nceldas; j++) {
+        for (int i = 0; i < nceldas; i++) {
+            for (int j = 0; j < nceldas; j++) {
                 celdas[i][j].setClickable(false);
             }
         }
@@ -187,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        if(v instanceof Celda) {
+        if (v instanceof Celda) {
             celdaPulsada((Celda) v);
         }
     }
