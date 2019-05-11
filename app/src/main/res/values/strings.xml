@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">EncuentraHipotenochas</string><string name="titulo_ins">Instrucciones</string>
+    <string name="contenido_ins">El juego es tipo buscaminas:\n Cuando pulsas en una casilla,sale "
+                "un número que identifica cuántas minas hay alrededor: Ten \n cuidado porque si "
+                "pulsas en una\n casilla que tenga una hipotenocha\n escondida, perderas. Si "
+                "crees o\n tienes la certeza de que hay una\n hipotenocha, haz un click largo\n "
+                "sobre la casilla para señalarla. No \nhagas un click largo en una casilla\n "
+                "donde no hay una hipotenocha\n porque perderás. Ganas una vez \nhayas encontrado "
+                "todas las hipotenochas</string>
+    <string name="btn_ins">OK</string>
+
+</resources>
