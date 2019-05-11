@@ -18,6 +18,10 @@ public class Celda extends Button {
         setPosiciony(y);
     }
 
+    public void incrementar() {
+        this.valor++;
+    }
+
     public int getValor() {
         return valor;
     }

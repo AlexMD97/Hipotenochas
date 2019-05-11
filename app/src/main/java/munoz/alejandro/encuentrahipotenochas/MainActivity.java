@@ -10,7 +10,6 @@ import android.widget.GridLayout;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
-
     private int nceldas; //Para saber el numero de celdas en cada dificultad
     private GridLayout tabla;
     private Celda[][] celdas;
@@ -24,48 +23,34 @@ public class MainActivity extends AppCompatActivity {
         nceldas = 8;
         nminas = 10;
 
+        iniciajuego();
     }
 
     private void iniciajuego() {
         inicializarTabla();
-
+        crearCeldas();
     }
 
     private void crearCeldas() {
         celdas = new Celda[nceldas][nceldas];
+        inicializarCeldas();
+        colocarMinas();
 
-        // Inicialializar
         for (int i = 0; i < nceldas; i++) {
-            for (int j = 0; i < nceldas; j++) {
-                celdas[i][j] = new Celda(this, 0, i, j);
-            }
-        }
-
-        // Colocar minas
-       /* int contador=0;
-        while (contador<nminas){
-            int x = (int) Math.round(Math.random() * nceldas);
-            int y = (int) Math.round(Math.random() * nceldas);
-
-            if(celdas[x][y].getValor() != -1) {
-                celdas[x][y].setValor(-1);
-                contador++;
-            }
-        }*/
-
-        // Calcular numeros
-
-        /* TODO:
-            Recorrer el array y sumar 1 a cada posición alrededor de cada mina.
-
-
-        Recordatorios:
-            1. sumar 1 sólo si no es mina.
-            2. al acceder a la posición, controlar el ArrayOutOfBoundsException
-         */
-        for (int i = 0; i < nceldas; i++) {
-            for (int j = 0; i < nceldas; j++) {
-
+            for (int j = 0; j < nceldas; j++) {
+                if(celdas[i][j].getValor() == -1) {
+                    for(int k = i-1; k<=i+1; k++) {
+                        for(int l = j-1; l<=j+1; l++) {
+                            try {
+                                if(celdas[k][l].getValor() != -1) {
+                                    celdas[k][l].incrementar();
+                                }
+                            } catch(ArrayIndexOutOfBoundsException ex) {
+                                // Controla que no nos salgamos del array
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -81,11 +66,23 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void inicializarCeldas() {
+        System.out.println(nceldas);
+        // Inicialializar
+        for (int i = 0; i < nceldas; i++) {
+            for (int j = 0; j < nceldas; j++) {
+                System.out.println(i + "," + j);
+                celdas[i][j] = new Celda(this, 0, i, j);
+            }
+        }
+    }
+
+
     private void colocarMinas() {
         int contador = 0;
         while (contador < nminas) {
-            int x = (int) Math.round(Math.random() * nceldas);
-            int y = (int) Math.round(Math.random() * nceldas);
+            int x = (int) Math.round(Math.random() * (nceldas-1));
+            int y = (int) Math.round(Math.random() * (nceldas-1));
 
             if (celdas[x][y].getValor() != -1) {
                 celdas[x][y].setValor(-1);
