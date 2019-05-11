@@ -1,19 +1,24 @@
 package munoz.alejandro.encuentrahipotenochas;
 
+import android.graphics.drawable.Drawable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.GridLayout;
+import android.widget.Toast;
 
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private int nceldas; //Para saber el numero de celdas en cada dificultad
     private GridLayout tabla;
     private Celda[][] celdas;
     private int nminas;
+    private Drawable hipotenocha;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,20 +27,34 @@ public class MainActivity extends AppCompatActivity {
 
         nceldas = 8;
         nminas = 10;
+        hipotenocha = this.getDrawable(R.mipmap.personaje1);
 
-        iniciajuego();
     }
 
     private void iniciajuego() {
-        inicializarTabla();
         crearCeldas();
+        inicializarTabla();
     }
 
     private void crearCeldas() {
         celdas = new Celda[nceldas][nceldas];
         inicializarCeldas();
         colocarMinas();
+        recalcularValores();
 
+        /* TODO: TAREA 2:
+            Elegir las hipotenochas y cambiar el menú
+         */
+
+        /* TODO: TAREA 3:
+            Crear las instrucciones
+            DONE
+         */
+
+
+    }
+
+    private void recalcularValores() {
         for (int i = 0; i < nceldas; i++) {
             for (int j = 0; j < nceldas; j++) {
                 if(celdas[i][j].getValor() == -1) {
@@ -53,30 +72,17 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-
-        /* TODO: TAREA 2:
-            Elegir las hipotenochas y cambiar el menú
-         */
-
-        /* TODO: TAREA 3:
-            Crear las instrucciones
-            DONE
-         */
-
-
     }
 
     private void inicializarCeldas() {
-        System.out.println(nceldas);
         // Inicialializar
         for (int i = 0; i < nceldas; i++) {
             for (int j = 0; j < nceldas; j++) {
-                System.out.println(i + "," + j);
                 celdas[i][j] = new Celda(this, 0, i, j);
+                celdas[i][j].setOnClickListener(this);
             }
         }
     }
-
 
     private void colocarMinas() {
         int contador = 0;
@@ -109,7 +115,44 @@ public class MainActivity extends AppCompatActivity {
 
         principal.removeAllViews();
         principal.addView(tabla);
+
+        int bancho = ancho / nceldas;
+        int balto = alto / nceldas;
+
+        for(int i=0; i<nceldas; i++) {
+            for(int j=0; j<nceldas; j++) {
+                tabla.addView(celdas[i][j], bancho, balto);
+                //System.out.printf("%d ", celdas[i][j].getValor());
+            }
+            //System.out.println('\n');
+        }
     }
+
+    private void celdaPulsada(Celda celda) {
+        switch (celda.getValor()) {
+            case -1:
+                celda.setDescubierto(true);
+                celda.setBackground(hipotenocha);
+               desactivarTodas();
+                Toast.makeText(this, "Has perdido!!", Toast.LENGTH_LONG).show();
+                break;
+            case 0:
+
+                break;
+            default:
+                celda.setDescubierto(true);
+                celda.setText(String.valueOf(celda.getValor()));
+        }
+    }
+
+    private void desactivarTodas() {
+        for(int i=0; i<nceldas; i++) {
+            for(int j=0; j<nceldas; j++) {
+                celdas[i][j].setClickable(false);
+            }
+        }
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -129,6 +172,7 @@ public class MainActivity extends AppCompatActivity {
                 ins.show();
                 break;
             case R.id.mnu_nuevo:
+                iniciajuego();
                 break;
             case R.id.mnu_config:
 
@@ -139,5 +183,12 @@ public class MainActivity extends AppCompatActivity {
 
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v instanceof Celda) {
+            celdaPulsada((Celda) v);
+        }
     }
 }

@@ -36,6 +36,7 @@ public class Celda extends Button {
 
     public void setDescubierto(boolean descubierto) {
         this.descubierto = descubierto;
+        this.setClickable(false);
     }
 
     public int getPosicionx() {
