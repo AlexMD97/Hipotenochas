@@ -24,10 +24,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Nivel por defecto, fácil
         nceldas = 8;
-        nminas = 1;
+        nminas = 10;
         hipotenocha = this.getDrawable(R.mipmap.personaje1);
-
     }
 
     private void iniciajuego() {
@@ -43,14 +43,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recalcularValores();
 
         /* TODO: TAREA 2:
-            Elegir las hipotenochas y cambiar el menú
+            Crear el spinner para elegir la hipotenocha
          */
 
         /* TODO: TAREA 3:
-            Crear las instrucciones
-            DONE
+            Crear el radiogroup para elegir la dificultad
          */
 
+        /* TODO: TAREA 4:
+            Instalar git y descargar el juego del repositorio.
+         */
 
     }
 
