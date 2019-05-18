@@ -1,5 +1,6 @@
 package munoz.alejandro.encuentrahipotenochas;
 
+import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.constraint.ConstraintLayout;
@@ -8,7 +9,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.GridLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -231,6 +234,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 break;
             case R.id.mnu_person:
+                final Dialog dialogo=new Dialog(this);
+                dialogo.setTitle("Elige personaje");
+                dialogo.setContentView(R.layout.spinner_personaje);
+
+                final Spinner spPersonaje = dialogo.findViewById(R.id.spinnerPersonaje);
+                spPersonaje.setAdapter(new PersonajeAdapter(personajes, this));
+
+                Button btn = dialogo.findViewById(R.id.btnOkSpinner);
+                btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        hipotenocha = ((Personaje) spPersonaje.getSelectedItem()).getImagen();
+                        dialogo.dismiss();
+                    }
+                });
+
+                dialogo.show();
                 break;
         }
 
