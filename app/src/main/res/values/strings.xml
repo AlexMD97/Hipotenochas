@@ -8,5 +8,8 @@
                 "donde no hay una hipotenocha\n porque perderás. Ganas una vez \nhayas encontrado "
                 "todas las hipotenochas</string>
     <string name="btn_ins">OK</string>
+    <string name="rb_princi">Principiante</string>
+    <string name="rb_amateur">Amateur</string>
+    <string name="rb_avan">Avanzado</string>
 
 </resources>

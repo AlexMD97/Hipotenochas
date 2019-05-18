@@ -1,21 +1,30 @@
 package munoz.alejandro.encuentrahipotenochas;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import java.util.ArrayList;
+
 public class PersonajeAdapter extends BaseAdapter {
-    //private ArrayList<Personajes>personajes;
+    private ArrayList<Personaje> personajes;
     private Context contexto;
+
+    public PersonajeAdapter(ArrayList<Personaje> personajes, Context contexto) {
+        this.personajes = personajes;
+        this.contexto = contexto;
+    }
+
     @Override
     public int getCount() {
-        return 0;
+        return personajes.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return null;
+        return personajes.get(i);
     }
 
     @Override
@@ -25,6 +34,11 @@ public class PersonajeAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        return null;
+        View v=view;
+        if(v==null){
+            LayoutInflater inflater= (LayoutInflater) contexto.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        }
+        return v;
     }
 }

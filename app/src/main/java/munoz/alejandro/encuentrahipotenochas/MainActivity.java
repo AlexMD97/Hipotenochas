@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.GridLayout;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
     private int nceldas; //Para saber el numero de celdas en cada dificultad
     private GridLayout tabla;
@@ -18,6 +20,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int nminas;
     private int descubiertas;
     private Drawable hipotenocha;
+    private ArrayList<Personaje> personajes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +31,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         nceldas = 8;
         nminas = 10;
         hipotenocha = this.getDrawable(R.mipmap.personaje1);
+
+        Personaje personaje1 = new Personaje("Personaje 1", getDrawable(R.mipmap.personaje1));
+        Personaje personaje2 = new Personaje("Personaje 2", getDrawable(R.mipmap.personaje2));
+        Personaje personaje3 = new Personaje("Personaje 3", getDrawable(R.mipmap.personaje3));
+        Personaje personaje4 = new Personaje("Personaje 4", getDrawable(R.mipmap.personaje4));
+
+        personajes = new ArrayList<Personaje>();
+        personajes.add(personaje1);
+        personajes.add(personaje2);
+        personajes.add(personaje3);
+        personajes.add(personaje4);
+
+
     }
 
     private void iniciajuego() {
@@ -132,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void clickEnCelda(Celda celda) {
-        if(!celda.isDescubierto()) {
+        if (!celda.isDescubierto()) {
             switch (celda.getValor()) {
                 case -1:
                     celda.setBackground(hipotenocha);
@@ -166,8 +182,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         for (int i = celda.getPosicionx() - 1; i <= celda.getPosicionx() + 1; i++) {
             for (int j = celda.getPosiciony() - 1; j <= celda.getPosiciony() + 1; j++) {
                 try {
-                    if(!celdas[i][j].isDescubierto()) {
-                        if(celdas[i][j].getValor() == 0) {
+                    if (!celdas[i][j].isDescubierto()) {
+                        if (celdas[i][j].getValor() == 0) {
                             celdas[i][j].setBackgroundColor(Color.BLUE);
                             descubrirRecursivo(celdas[i][j]);
                         } else {
@@ -175,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             celdas[i][j].setDescubierto(true);
                         }
                     }
-                } catch(ArrayIndexOutOfBoundsException ex) {
+                } catch (ArrayIndexOutOfBoundsException ex) {
 
                 }
             }
@@ -224,15 +240,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void analisisVictoria() {
         int celdasDescubiertas = 0;
-        for(int i=0; i<nceldas; i++) {
-            for(int j=0; j<nceldas; j++) {
-                if(celdas[i][j].isDescubierto()) {
+        for (int i = 0; i < nceldas; i++) {
+            for (int j = 0; j < nceldas; j++) {
+                if (celdas[i][j].isDescubierto()) {
                     celdasDescubiertas++;
                 }
             }
         }
 
-        if(celdasDescubiertas == Math.pow(nceldas,2) && descubiertas == nminas) {
+        if (celdasDescubiertas == Math.pow(nceldas, 2) && descubiertas == nminas) {
             victoria();
         }
     }
@@ -249,7 +265,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (v instanceof Celda) {
             Celda pulsada = (Celda) v;
 
-            if(pulsada.getValor() == -1) {
+            if (pulsada.getValor() == -1) {
                 descubiertas++;
                 pulsada.setBackground(hipotenocha);
                 pulsada.setDescubierto(true);
