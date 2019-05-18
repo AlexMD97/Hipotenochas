@@ -3,14 +3,15 @@ package munoz.alejandro.encuentrahipotenochas;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridLayout;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -231,7 +232,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 iniciajuego();
                 break;
             case R.id.mnu_config:
+                final  Dialog dialog=new Dialog(this);
+                dialog.setTitle("Elige dificultad.");
+                dialog.setContentView(R.layout.radiobutton_dificultad);
 
+                Button btndif=dialog.findViewById(R.id.btnOkdif);
+                btndif.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //Comprobar el rb que esta pulsado
+                        RadioButton rbprin=dialog.findViewById(R.id.rbPrincipiante);
+                        RadioButton rbamateur=dialog.findViewById(R.id.rbAmateur);
+                        if(rbprin.isChecked()){
+                            //Nivel facil
+                            nceldas=8;
+                            nminas=10;
+                        }else if(rbamateur.isChecked()){
+                            nceldas=12;
+                            nminas=30;
+                        }else {
+                            //Nivel dificil
+                            nceldas=16;
+                            nminas=60;
+                        }
+                        iniciajuego();
+                        dialog.dismiss();
+                    }
+                });
+
+
+                dialog.show();
                 break;
             case R.id.mnu_person:
                 final Dialog dialogo=new Dialog(this);
@@ -246,6 +276,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onClick(View v) {
                         hipotenocha = ((Personaje) spPersonaje.getSelectedItem()).getImagen();
+                        iniciajuego();
                         dialogo.dismiss();
                     }
                 });
